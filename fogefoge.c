@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+char **mapa;
+int linhas;
+int colunas;
+
 int main()
 {
-    char mapa[5][10+1];
 
     FILE *f;
     f = fopen("mapa.txt", "r");
@@ -13,7 +16,15 @@ int main()
         exit(1);
     }
 
-    for (int i = 0; i <= 4; i++)
+    fscanf(f, "%d %d", &linhas, &colunas);
+
+    mapa = malloc(sizeof(char *) * linhas);
+    for (int i = 0; i < linhas; i++)
+    {
+        mapa[i] = malloc(sizeof(char) * (colunas + 1));
+    }
+
+    for (int i = 0; i <= linhas; i++)
     {
         fscanf(f, "%s", mapa[i]);
     }
@@ -21,4 +32,10 @@ int main()
     {
         printf("%s\n", mapa[i]);
     }
+
+    for (int i = 0; i < linhas; i++)
+    {
+        free(mapa[i]);
+    }
+    free(mapa);
 }
