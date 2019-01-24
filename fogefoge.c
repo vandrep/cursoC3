@@ -1,41 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "fogefoge.h"
+#include "mapa.h"
 
-char **mapa;
-int linhas;
-int colunas;
+MAPA m;
+POSICAO posicaoHeroi;
+POSICAO posicaoFantasma[2];
+
+int x;
 
 int main()
 {
+    leMapa(&m);
+    encontraMapa(&m, &posicaoHeroi, HEROI);
+    // encontraFantasmas(&m, posicaoFantasma);
 
-    FILE *f;
-    f = fopen("mapa.txt", "r");
-    if (f == 0)
+    while (!acabou())
     {
-        printf("Erro na leitura do mapa\n");
-        exit(1);
+        imprimeMapa(&m);
+
+        char comando;
+        scanf(" %c", &comando);
+        move(comando);
     }
 
-    fscanf(f, "%d %d", &linhas, &colunas);
+    liberaMapa(&m);
+}
 
-    mapa = malloc(sizeof(char *) * linhas);
-    for (int i = 0; i < linhas; i++)
+void fantasmas()
+{
+
+}
+
+void move(char direcao)
+{
+    POSICAO proximo;
+    proximo.x = posicaoHeroi.x;
+    proximo.y = posicaoHeroi.y;
+
+    switch (direcao)
     {
-        mapa[i] = malloc(sizeof(char) * (colunas + 1));
+    case ESQUERDA:
+        proximo.y--;
+        break;
+    case CIMA:
+        proximo.x--;
+        break;
+    case BAIXO:
+        proximo.x++;
+        break;
+    case DIREITA:
+        proximo.y++;
+        break;
+    default:
+        break;
     }
 
-    for (int i = 0; i <= linhas; i++)
-    {
-        fscanf(f, "%s", mapa[i]);
-    }
-    for (int i = 0; i <= 4; i++)
-    {
-        printf("%s\n", mapa[i]);
-    }
+    andaNoMapa(&m, &posicaoHeroi, proximo, HEROI);
+}
 
-    for (int i = 0; i < linhas; i++)
-    {
-        free(mapa[i]);
-    }
-    free(mapa);
+int acabou()
+{
+    return 0;
 }
